@@ -57,9 +57,6 @@
     }
   </style>
 </head>
-  <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <body>
   <h1>Just Us 💖</h1>
@@ -67,7 +64,27 @@
   <button onclick="sendLove()">❤ I Miss You</button>
   <div class="messages" id="messages"></div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
   <script>
+    // TODO: Replace with your actual Firebase config (from Project Settings > Web App)
+    const firebaseConfig = {
+  apiKey: "AIzaSyCnhnwPz7kPsxxNI2ITHBq3aA9Zmr5GTM0",
+  authDomain: "divya-manoj.firebaseapp.com",
+  databaseURL: "https://divya-manoj-default-rtdb.firebaseio.com",
+  projectId: "divya-manoj",
+  storageBucket: "divya-manoj.firebasestorage.app",
+  messagingSenderId: "778093487534",
+  appId: "1:778093487534:web:c10465fbf68a7ac79e943f",
+  measurementId: "G-2787CHQKST"
+};
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
     const messages = [
       'Thinking of you 💭',
       'Just wanted to say I love you 💖',
@@ -77,8 +94,16 @@
     ];
 
     function sendLove() {
-      const box = document.getElementById('messages');
       const msg = messages[Math.floor(Math.random() * messages.length)];
+
+      // Push message to Firebase
+      database.ref("love-messages").push({
+        message: msg,
+        timestamp: Date.now()
+      });
+
+      // Show the message locally too
+      const box = document.getElementById('messages');
       const div = document.createElement('div');
       div.className = 'message';
       div.textContent = msg;
